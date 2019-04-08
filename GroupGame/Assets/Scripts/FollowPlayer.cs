@@ -2,6 +2,8 @@
 
 // If you have C# code and you want to edit SmoothFollow's vars ingame, use this instead.
 
+// Credit for this script goes to Hamcha on GitHub:  https://gist.github.com/Hamcha/6096905
+
 using UnityEngine;
 
 using System.Collections;
@@ -45,7 +47,6 @@ public class FollowPlayer : MonoBehaviour {
 		if (!target) return;
 
 
-
 		// Calculate the current rotation angles
 
 		float wantedRotationAngle = target.eulerAngles.y;
@@ -53,11 +54,9 @@ public class FollowPlayer : MonoBehaviour {
 		float wantedHeight = target.position.y + height;
 
 
-
 		float currentRotationAngle = transform.eulerAngles.y;
 
 		float currentHeight = transform.position.y;
-
 
 
 		// Damp the rotation around the y-axis
@@ -65,11 +64,9 @@ public class FollowPlayer : MonoBehaviour {
 		currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
 
 	
-
 		// Damp the height
 
 		currentHeight = Mathf.Lerp(currentHeight, wantedHeight, heightDamping * Time.deltaTime);
-
 
 
 		// Convert the angle into a rotation
@@ -77,7 +74,6 @@ public class FollowPlayer : MonoBehaviour {
 		var currentRotation = Quaternion.Euler(0, currentRotationAngle, 0);
 
 	
-
 		// Set the position of the camera on the x-z plane to:
 
 		// distance meters behind the target
@@ -87,13 +83,11 @@ public class FollowPlayer : MonoBehaviour {
 		transform.position -= currentRotation * Vector3.forward * distance;
 
 
-
 		// Set the height of the camera
 
 		transform.position = new Vector3(transform.position.x,currentHeight,transform.position.z);
 
 	
-
 		// Always look at the target
 
 		transform.LookAt(target);
