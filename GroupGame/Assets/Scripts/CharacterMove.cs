@@ -24,7 +24,7 @@ public class CharacterMove : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(this.transform.position, -this.transform.up,out hit, 10);   //A short ray shot directly downward from the center of the character.
 
-        if(hit.distance == 0)                                               //if the distance is zero, the ray probably did not hit anything.
+        if(System.Math.Abs(hit.distance) < System.Single.Epsilon)                                           //if the distance is zero, the ray probably did not hit anything.
         {
             return false;
         }
@@ -47,12 +47,9 @@ public class CharacterMove : MonoBehaviour
         float curSpeed = speed * Input.GetAxis("Vertical");
         controller.SimpleMove(forward * curSpeed);
 
-        if (Input.GetButtonDown ("Jump"))               //jump if the character is grounded and the user presses the jump button.
+        if (Input.GetButtonDown ("Jump") && isGrounded())               //jump if the character is grounded and the user presses the jump button.
         {
-            if(isGrounded())
-            { 
-                moveDirection.y= jumpSpeed;
-            }
+            moveDirection.y= jumpSpeed;
         }
 
         moveDirection.y -= gravity * Time.deltaTime;        //apply gravity to the character.
