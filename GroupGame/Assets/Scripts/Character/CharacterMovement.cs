@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 
-public class CharacterMove : MonoBehaviour
+public class CharacterMovement : MonoBehaviour
 {
     public float speed = 3.0F;          //the moving speed of the character
 
@@ -55,4 +55,5 @@ public class CharacterMove : MonoBehaviour
         moveDirection.y -= gravity * Time.deltaTime;        //apply gravity to the character.
         controller.Move(moveDirection * Time.deltaTime);    //move the character based on the gravitational force.
     }
+
 }

@@ -28,30 +28,37 @@ public class FollowPlayer : MonoBehaviour {
 
 	// How much we 
 
-	public float heightDamping = 2.0f;
+	public float heightDamping = 5.0f;
 
-	public float rotationDamping = 3.0f;
+	public float rotationDamping = 5.0f;
 
-
-
-	// Place the script in the Camera-Control group in the component menu
-
-	[AddComponentMenu("Camera-Control/Follow Player")]
+    //The basic rotate speed
+    public float speedH = 20.0f;
+    public float speedV = 2.0f;
 
 
 
-	void LateUpdate () {
+    // Place the script in the Camera-Control group in the component menu
+
+    [AddComponentMenu("Camera-Control/Follow Player")]
+
+    void Awake()
+    {
+        Cursor.visible = false;
+    }
+
+
+    void LateUpdate () {
 
 		// Early out if we don't have a target
 
 		if (!target) return;
 
-
 		// Calculate the current rotation angles
 
-		float wantedRotationAngle = target.eulerAngles.y;
+		float wantedRotationAngle = transform.eulerAngles.y + speedH * Input.GetAxis("Mouse X");
 
-		float wantedHeight = target.position.y + height;
+		float wantedHeight = target.position.y + height - distance * speedV * Input.GetAxis("Mouse Y");
 
 
 		float currentRotationAngle = transform.eulerAngles.y;
@@ -62,17 +69,15 @@ public class FollowPlayer : MonoBehaviour {
 		// Damp the rotation around the y-axis
 
 		currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
-
 	
 		// Damp the height
 
 		currentHeight = Mathf.Lerp(currentHeight, wantedHeight, heightDamping * Time.deltaTime);
 
 
-		// Convert the angle into a rotation
+        // Convert the angle into a rotation
 
-		var currentRotation = Quaternion.Euler(0, currentRotationAngle, 0);
-
+        var currentRotation = Quaternion.Euler(-speedV * Input.GetAxis("Mouse Y"), currentRotationAngle, 0);
 	
 		// Set the position of the camera on the x-z plane to:
 
