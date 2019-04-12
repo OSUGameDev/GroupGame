@@ -10,7 +10,7 @@ public class CharacterMovement : MonoBehaviour
 
     public float rotateSpeed = 3.0F;    //the rotate speed of the character
 
-    public float jumpSpeed = 8.0f;      //the jump force of the character
+    public float jumpSpeed = 18.0f;      //the jump force of the character
 
     public float gravity = 20.0f;       //the force of gravity on the character
 
@@ -18,6 +18,26 @@ public class CharacterMovement : MonoBehaviour
 
     private Vector3 moveDirection = Vector3.zero;   //the direction the character should move.
 
+    private CharacterController controller;
+
+    private GameObject head;      //The main camera of player, used to rotate the camera
+
+    private Rigidbody rb;       //The rigidbody used for physics
+
+    private float rotationX, rotationY;        //The rotation parameter
+
+
+    //This built-in function will be called after the script first time loaded into the scene
+    void Awake()
+    {
+        Cursor.visible = false;
+
+        controller = GetComponent<CharacterController>();
+
+        head = this.gameObject.transform.GetChild(0).gameObject;
+
+        rb = GetComponent<Rigidbody>();     //Get the rigidbody
+    }
 
     ///The check to see if the character is currently on the ground.
     private bool isGrounded(){
@@ -37,22 +57,23 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
-        CharacterController controller = GetComponent<CharacterController>();
+        // Rotate the object
+        rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * rotateSpeed;
+        rotationY -= Input.GetAxis("Mouse Y") * rotateSpeed;
+        transform.localEulerAngles = new Vector3(0, rotationX, 0);
+        head.transform.localEulerAngles = new Vector3(rotationY, 0, 0);
 
-        // Rotate around y - axis
-        transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
 
-        // Move forward / backward
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        float curSpeed = speed * Input.GetAxis("Vertical");
-        controller.SimpleMove(forward * curSpeed);
+        // Move the character     
+        moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));       //Create the player's movement from keyboard in local space
+        moveDirection = transform.TransformDirection(moveDirection);      //Transform the moveMent from local space to world space
+        moveDirection *= speed;      //Based on base speed
 
-        if (Input.GetButtonDown ("Jump") && isGrounded())               //jump if the character is grounded and the user presses the jump button.
+        if (Input.GetButtonDown ("Jump"))               //jump if the character is grounded and the user presses the jump button.
         {
-            moveDirection.y= jumpSpeed;
+            rb.AddForce(jumpSpeed * Vector3.up, ForceMode.Impulse);     //Give a force to player
         }
 
-        moveDirection.y -= gravity * Time.deltaTime;        //apply gravity to the character.
         controller.Move(moveDirection * Time.deltaTime);    //move the character based on the gravitational force.
     }
 
