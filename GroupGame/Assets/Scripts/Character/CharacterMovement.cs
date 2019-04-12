@@ -18,11 +18,13 @@ public class CharacterMovement : MonoBehaviour
 
     private Vector3 moveDirection = Vector3.zero;   //the direction the character should move.
 
+    private Vector3 jumpDirection = Vector3.zero;
+
     private CharacterController controller;
 
     private GameObject head;      //The main camera of player, used to rotate the camera
 
-    private Rigidbody rb;       //The rigidbody used for physics
+    //private GameObject gun;
 
     private float rotationX, rotationY;        //The rotation parameter
 
@@ -35,8 +37,6 @@ public class CharacterMovement : MonoBehaviour
         controller = GetComponent<CharacterController>();
 
         head = this.gameObject.transform.GetChild(0).gameObject;
-
-        rb = GetComponent<Rigidbody>();     //Get the rigidbody
     }
 
     ///The check to see if the character is currently on the ground.
@@ -62,6 +62,7 @@ public class CharacterMovement : MonoBehaviour
         rotationY -= Input.GetAxis("Mouse Y") * rotateSpeed;
         transform.localEulerAngles = new Vector3(0, rotationX, 0);
         head.transform.localEulerAngles = new Vector3(rotationY, 0, 0);
+        //gun.transform.localEulerAngles = new Vector3(rotationY, 0, 0);
 
 
         // Move the character     
@@ -71,10 +72,14 @@ public class CharacterMovement : MonoBehaviour
 
         if (Input.GetButtonDown ("Jump"))               //jump if the character is grounded and the user presses the jump button.
         {
-            rb.AddForce(jumpSpeed * Vector3.up, ForceMode.Impulse);     //Give a force to player
+            jumpDirection.y = jumpSpeed;     //Give a jump speed to player
         }
 
         controller.Move(moveDirection * Time.deltaTime);    //move the character based on the gravitational force.
+
+        jumpDirection.y -= gravity * Time.deltaTime;
+
+        controller.Move(jumpDirection * Time.deltaTime);
     }
 
 }
