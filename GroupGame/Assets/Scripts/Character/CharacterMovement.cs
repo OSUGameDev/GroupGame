@@ -30,7 +30,7 @@ public class CharacterMovement : MonoBehaviour
 
 
     //This built-in function will be called after the script first time loaded into the scene
-    void Awake()
+    void Start()
     {
         Cursor.visible = false;
 
