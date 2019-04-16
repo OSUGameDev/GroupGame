@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Death Cube
   - Laser Weapon
+  - Environment
+  - Target Tester
   layers:
   - Default
   - TransparentFX
