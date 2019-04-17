@@ -36,7 +36,7 @@ public class EnemyHealth : MonoBehaviour
     }
 
 
-    //This function will be called when the player take damage from a specific source
+    //This function will be called when the player takes damage from a specific source
     public void TakeDamage(int amount)
     {
         Debug.Log("Being hit!");
