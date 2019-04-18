@@ -655,9 +655,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: c2db7059-aaed-431e-8154-2c50cb649b9e
+  cloudProjectId: 3f7a8c72-7856-4dee-9b90-1b13f4a92f5e
   projectName: GroupGame
-  organizationId: alasseslome
+  organizationId: brendanmoore98
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
