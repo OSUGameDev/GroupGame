@@ -38,8 +38,8 @@ public class LaserGun : MonoBehaviour {
             if(Physics.Raycast(ray, out hit))
             {
                 Debug.Log("Fire! \n");
-                //If the target has a collider (hitable)
-                if (hit.collider != null)
+                
+                if (hit.collider != null)           //If the target has a collider (hitable)
                 {
                     Debug.Log("Hit! \n");
 
@@ -56,6 +56,10 @@ public class LaserGun : MonoBehaviour {
                         Debug.Log("Hit the target!");
                         target.GetComponent<EnemyHealth>().TakeDamage(20);      //Make damage to target
                     }
+                }
+                else            //If the player shot something that 
+                {
+
                 }
             }           
         }
