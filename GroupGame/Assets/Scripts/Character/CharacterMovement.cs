@@ -10,7 +10,9 @@ public class CharacterMovement : MonoBehaviour
 
     public float rotateSpeed = 3.0F;    //the rotate speed of the character
 
-    public float jumpSpeed = 18.0f;      //the jump force of the character
+    public float jumpSpeed = 10.0f;      //the jump force of the character
+    private int jumpFlag = 0;
+    private float jumpStartT = 0.4f;
 
     public float gravity = 20.0f;       //the force of gravity on the character
 
@@ -72,7 +74,17 @@ public class CharacterMovement : MonoBehaviour
 
         if (Input.GetButtonDown ("Jump"))               //jump if the character is grounded and the user presses the jump button.
         {
-            jumpDirection.y = jumpSpeed;     //Give a jump speed to player
+            jumpFlag = 1;
+        }
+        if(jumpFlag == 1)
+        {
+            jumpStartT -= Time.deltaTime;   
+            if(jumpStartT <= 0)
+            {
+                jumpDirection.y = jumpSpeed;     //Give a jump speed to player
+                jumpFlag = 0;
+                jumpStartT = 0.4f;
+            }
         }
 
         controller.Move(moveDirection * Time.deltaTime);    //move the character based on the gravitational force.
