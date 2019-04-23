@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RocketLauncher : MonoBehaviour
 {
-    private float fire_rate = 0.1f;         //How long for a singla fire exists
+    private float fire_rate = 0.3f;         //How long for a singla fire exists
     private int can_fire = 1;               //If the player fired
 
     private Camera playerCam;
@@ -27,7 +27,7 @@ public class RocketLauncher : MonoBehaviour
         //Check if the player hit the fire button
         if (Input.GetButton("Fire1") && can_fire ==1)
         {
-            GameObject CR = Instantiate(Rocket, transform.position, transform.rotation);        //Instantiate the rocket object at current position
+            GameObject CR = Instantiate(Rocket, transform.position, transform.rotation);        //Instantiate the rocket object at current position and current angle
             CR.GetComponent<Rigidbody>().velocity = transform.forward * rocket_speed;       //Set the speed
             can_fire = 0;
         }

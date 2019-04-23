@@ -74,8 +74,10 @@ public class CharacterMovement : MonoBehaviour
 
         if (Input.GetButtonDown ("Jump"))               //jump if the character is grounded and the user presses the jump button.
         {
-            jumpFlag = 1;
+            jumpDirection.y = jumpSpeed;     //Give a jump speed to player
+            //jumpFlag = 1;
         }
+        /*
         if(jumpFlag == 1)
         {
             jumpStartT -= Time.deltaTime;   
@@ -86,6 +88,7 @@ public class CharacterMovement : MonoBehaviour
                 jumpStartT = 0.4f;
             }
         }
+        */
 
         controller.Move(moveDirection * Time.deltaTime);    //move the character based on the gravitational force.
 
