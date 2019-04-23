@@ -46,7 +46,7 @@ public class DestroyMe : MonoBehaviour {
 			foreach (Transform child in brokenObject.transform) 	//loop through all the shards (the children of the broken object), 
 			{														//	reactivate them, and apply an explosive for, coming from the explosion center.
 				child.gameObject.SetActive(true);
-				child.gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, explosionLocation, explosionSize);
+				//child.gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, explosionLocation, explosionSize);
 			}
 
 		}
