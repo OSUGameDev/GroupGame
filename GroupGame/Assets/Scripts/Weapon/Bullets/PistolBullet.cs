@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PistolBullet : Bullet {
+    
 
     public override void onHit(Collider obj) {
-        if(obj.tag != "Player") {//hoping the player actually has this as it's tag...
-            if(obj.tag == "Target Tester") {//doesn't actually work all the time?
-                obj.GetComponent<EnemyHealth>().TakeDamage(damage);
-            }
-            Destroy(gameObject);
+        if (obj.tag == "Target Tester") {//doesn't actually work all the time?
+            obj.GetComponent<EnemyHealth>().TakeDamage(damage);
         }
+        Destruct();
     }
 
     // Use this for initialization
@@ -19,5 +18,6 @@ public class PistolBullet : Bullet {
         this.damage = 20;
         base.Start();
     }
+    
 
 }
