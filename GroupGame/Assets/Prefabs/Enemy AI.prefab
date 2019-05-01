@@ -165,5 +165,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFound: 0
-  aiVision: {fileID: 0}
+  aiVision: {fileID: 8911246176518853659}
   lookSpeed: 3

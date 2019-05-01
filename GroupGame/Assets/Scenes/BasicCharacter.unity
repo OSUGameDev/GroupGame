@@ -4705,7 +4705,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1986809336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.74, z: 1.15}
+  m_LocalPosition: {x: 0, y: 0.74, z: 7.72}
   m_LocalScale: {x: 0.5, y: 1, z: 0.5}
   m_Children:
   - {fileID: 116865638}
@@ -4725,8 +4725,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFound: 0
+  currentTarget: {fileID: 0}
   aiVision: {fileID: 0}
+  laserBolt: {fileID: 4487050043495636655, guid: e3b9bcfc251c0014d800ecfb5a03a4cc,
+    type: 3}
   lookSpeed: 3
+  reloadSpeed: 2
 --- !u!1001 &1990178030
 PrefabInstance:
   m_ObjectHideFlags: 0

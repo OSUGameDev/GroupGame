@@ -20,6 +20,8 @@ public class EnemyAiVision : MonoBehaviour
 
    private void OnTriggerEnter(Collider other){
      if (other.tag == "Player"){
+          /*add an if statement here that makes sure that the enemy doesn't see things that are behind it, 
+          which is way easier and less resource intensive than making a custom half circle mesh for the collider*/
           opponentSpotted = true;
           enemySeen = other.gameObject;
      }

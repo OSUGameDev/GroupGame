@@ -6,13 +6,18 @@ public class EnemyAI : MonoBehaviour
 {
      // Start is called before the first frame update
     public bool targetFound;
-    private GameObject currentTarget;
+    public GameObject currentTarget;
     public GameObject aiVision;
+    public GameObject laserBolt;
     public float lookSpeed = 3;
+    public float reloadSpeed = 2; //seconds
+
+    private float nextFire;
   
 
     void Start(){
         aiVision = this.gameObject.transform.GetChild(0).gameObject;//get the Enemy Vision Object
+        nextFire = Time.time + 5; //set enemy weapon to start unloaded
     }
 
     // Update is called once per frame
@@ -22,6 +27,8 @@ public class EnemyAI : MonoBehaviour
         if(targetFound){ //engages target as long as targetFound is true, it is important to make sure that the enemy does not try to engage with a null gameobject since that will cause a crash
             engageTarget();
         }
+        else
+            nextFire = Time.time + 4; // allow time for the enemy to rotate before firing since it'll shoot while turning
     }
 
     void lookForTarget(){ //Checks vision child for if it sees an enemy
@@ -40,5 +47,15 @@ public class EnemyAI : MonoBehaviour
 
         // Move our position a step closer to the target.
         transform.rotation = Quaternion.LookRotation(newDir);
+
+        shootTarget(); //it's pew pew time
+    }
+    void shootTarget(){
+        //every
+        if(Time.time > nextFire){
+            var newLaser = Instantiate (laserBolt, transform); //laserbolt will get the location of the current target on it's start
+            newLaser.transform.parent = gameObject.transform; //sets the enemy as the parent of the laser so we can give the location of the current target easier
+            nextFire = reloadSpeed + Time.time; // set next time to fire to be whatever the reload speed is 
+        }   
     }
 }
