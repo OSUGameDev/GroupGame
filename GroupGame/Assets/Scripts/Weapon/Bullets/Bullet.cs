@@ -31,19 +31,19 @@ public abstract class Bullet : MonoBehaviour {
         gameObject.GetComponent<Rigidbody>().velocity *= speed;
     }
 
+	protected void Reset(){
+		existTime = 0;
+	}
+
     protected virtual void Update() {
-        
+		existTime += Time.deltaTime; //counting time based on seconds since last frame
+
+		//deleting object if it exceeds it's maximum lifespan
+		if (existTime >= maxExistTime) {
+			Destruct();        
+		}
     }
 
-    protected virtual void FixedUpdate() {
-        existTime += Time.deltaTime; //counting time based on seconds since last frame
-
-        //deleting object if it exceeds it's maximum lifespan
-        if (existTime >= maxExistTime) {
-            Destruct();        
-        }
-    }
-    
     //Called on hit with anything. 
     public abstract void onHit(Collider obj);
 

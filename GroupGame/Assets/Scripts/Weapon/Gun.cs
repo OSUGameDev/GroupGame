@@ -11,7 +11,6 @@ public abstract class Gun : MonoBehaviour {
     public Rigidbody bulletObj;
     
     public float coolDownMS = 100f;
-    public float bulletSpeed = 5000f;
 
 
     protected Camera playerCam;      //Using new to hide the laser's camera object (This was suggested by unity, if the camera has any laser)
@@ -33,7 +32,6 @@ public abstract class Gun : MonoBehaviour {
         if (!Input.GetButton("Fire1") || (getCurrentMS() - lastFireMS) < coolDownMS) {
             return;
         }
-
         
         Rigidbody bulletClone = (Rigidbody)Instantiate(bulletObj, transform.position, transform.rotation);
         bulletClone.velocity = playerCam.transform.forward;

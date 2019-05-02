@@ -17,7 +17,6 @@ public class Pistol : Gun {
 
     //this function is unity one that sets the variables in the unity editor to this by default
     public void Reset() {
-        bulletSpeed = 10000f;
         coolDownMS = 250f;
     }
 }
