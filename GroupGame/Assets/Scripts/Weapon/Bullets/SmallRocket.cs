@@ -22,7 +22,9 @@ public class SmallRocket : MonoBehaviour {
         life_time += Time.deltaTime;            //Count the time
         if(life_time >= max_life)               //If exists too long
         {
-            Destroy(gameObject);        //Delete this object
+            life_time = 0.0f;
+            this.gameObject.SetActive(false);
+            //Destroy(gameObject);        //Delete this object
         }
 	}
 
@@ -31,7 +33,9 @@ public class SmallRocket : MonoBehaviour {
         if(life_time >= 0.05f)      //This was used to prevent collide with the player's collider, will be fixed later
         {
             Instantiate(explosion, transform.position, transform.rotation);
-            Destroy(gameObject);
+            life_time = 0.0f;
+            this.gameObject.SetActive(false);
+            //Destroy(gameObject);
         }
     }
 }

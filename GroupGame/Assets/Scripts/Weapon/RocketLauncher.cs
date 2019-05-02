@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RocketLauncher : MonoBehaviour
 {
+    private PooledGameObjects pgo;          //the script handling pooling. to be called when a bullet is "created"
     private float fire_rate = 0.3f;         //How long for a singla fire exists
     private int can_fire = 1;               //If the player fired
 
@@ -17,7 +18,8 @@ public class RocketLauncher : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        playerCam = transform.parent.transform.GetChild(0).GetComponent<Camera>();
+        //playerCam = transform.parent.transform.GetChild(0).GetComponent<Camera>();
+        pgo = GameObject.Find("PooledBullets").GetComponent<PooledGameObjects>();
     }
 
 
@@ -27,7 +29,11 @@ public class RocketLauncher : MonoBehaviour
         //Check if the player hit the fire button
         if (Input.GetButton("Fire1") && can_fire ==1)
         {
-            GameObject CR = Instantiate(Rocket, transform.position, transform.rotation);        //Instantiate the rocket object at current position and current angle
+            GameObject CR = pgo.GetPooledObject();
+            CR.transform.position = transform.position;
+            CR.transform.rotation = transform.rotation;
+            CR.SetActive(true);
+            //GameObject CR = Instantiate(Rocket, transform.position, transform.rotation);        //Instantiate the rocket object at current position and current angle
             CR.GetComponent<Rigidbody>().velocity = transform.forward * rocket_speed;       //Set the speed
             can_fire = 0;
         }
