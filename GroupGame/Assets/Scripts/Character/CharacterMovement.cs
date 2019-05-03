@@ -7,38 +7,34 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     public float speed = 3.0F;          //the moving speed of the character
-
-    public float rotateSpeed = 3.0F;    //the rotate speed of the character
-
     public float jumpSpeed = 10.0f;      //the jump force of the character
-    private int jumpFlag = 0;
-    private float jumpStartT = 0.4f;
 
     public float gravity = 20.0f;       //the force of gravity on the character
 
     public float GroundOffset = .2f;    //the offset for the IsGrounded check. Useful for recognizing slopes and imperfect ground.
 
+    private float moveH, moveV;
     private Vector3 moveDirection = Vector3.zero;   //the direction the character should move.
-
     private Vector3 jumpDirection = Vector3.zero;
+    private bool isMove, isRun;
 
     private CharacterController controller;
+    private Animator anim;
 
-    private GameObject head;      //The main camera of player, used to rotate the camera
-
-    //private GameObject gun;
-
-    private float rotationX, rotationY;        //The rotation parameter
+    private ThirdPersonCamera cam;
 
 
     //This built-in function will be called after the script first time loaded into the scene
     void Start()
     {
+        this.isMove = false;
+        this.isRun = false;
+
         Cursor.visible = false;
 
-        controller = GetComponent<CharacterController>();
-
-        head = this.gameObject.transform.GetChild(0).gameObject;
+        this.controller = GetComponent<CharacterController>();
+        this.anim = GetComponent<Animator>();
+        this.cam = this.transform.GetChild(2).GetComponentInChildren<ThirdPersonCamera>();
     }
 
     ///The check to see if the character is currently on the ground.
@@ -57,44 +53,49 @@ public class CharacterMovement : MonoBehaviour
         return false;
     }
 
-    void Update()
+    private void move()
     {
-        // Rotate the object
-        rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * rotateSpeed;
-        rotationY -= Input.GetAxis("Mouse Y") * rotateSpeed;
-        transform.localEulerAngles = new Vector3(0, rotationX, 0);
-        head.transform.localEulerAngles = new Vector3(rotationY, 0, 0);
-        //gun.transform.localEulerAngles = new Vector3(rotationY, 0, 0);
+        // Move the character   
+        moveH = Input.GetAxis("Horizontal");
+        moveV = Input.GetAxis("Vertical");
+        if (moveH != 0 || moveV != 0)
+        {
+            isMove = true;
+            this.transform.rotation = Quaternion.Euler(0f, cam.getAngle(), 0f);
+        }
+        else
+        {
+            isMove = false;
+            isRun = false;
+        }
 
-
-        // Move the character     
-        moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));       //Create the player's movement from keyboard in local space
+        moveDirection = new Vector3(moveH, 0.0f, moveV);       //Create the player's movement from keyboard in local space
         moveDirection = transform.TransformDirection(moveDirection);      //Transform the moveMent from local space to world space
         moveDirection *= speed;      //Based on base speed
+        if (Input.GetButtonDown("Run"))
+        {
+            this.isRun = !this.isRun;
+            moveDirection *= speed;
+        }
 
-        if (Input.GetButtonDown ("Jump"))               //jump if the character is grounded and the user presses the jump button.
+        anim.SetFloat("Horizontal", moveH);
+        anim.SetFloat("Vertical", moveV);
+        anim.SetBool("isMove", isMove);
+        anim.SetBool("isRun", isRun);
+
+        if (Input.GetButtonDown("Jump"))               //jump if the character is grounded and the user presses the jump button.
         {
             jumpDirection.y = jumpSpeed;     //Give a jump speed to player
-            //jumpFlag = 1;
         }
-        /*
-        if(jumpFlag == 1)
-        {
-            jumpStartT -= Time.deltaTime;   
-            if(jumpStartT <= 0)
-            {
-                jumpDirection.y = jumpSpeed;     //Give a jump speed to player
-                jumpFlag = 0;
-                jumpStartT = 0.4f;
-            }
-        }
-        */
 
         controller.Move(moveDirection * Time.deltaTime);    //move the character based on the gravitational force.
-
         jumpDirection.y -= gravity * Time.deltaTime;
-
         controller.Move(jumpDirection * Time.deltaTime);
+    }
+
+    void Update()
+    {
+        move();
     }
 
 }
