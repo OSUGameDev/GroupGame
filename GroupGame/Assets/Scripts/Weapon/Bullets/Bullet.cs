@@ -10,6 +10,8 @@ public abstract class Bullet : MonoBehaviour {
     public float speed = 10f;
     public float maxExistTime = 10f;
     //TODO: bullet dropoff? 
+    public bool bouncy = false;
+    public bool usesGravity = false;
 
     protected float existTime = 0f;
     
@@ -28,12 +30,9 @@ public abstract class Bullet : MonoBehaviour {
             explosion = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefab/Effect/Explosion/Explosion", typeof(GameObject));
         }
 
+        gameObject.name = this.GetType().Name; //will need to edit tag later to include playerID to allow collisions with other bullets.
         gameObject.GetComponent<Rigidbody>().velocity *= speed;
     }
-
-	protected void Reset(){
-		existTime = 0;
-	}
 
     protected virtual void Update() {
 		existTime += Time.deltaTime; //counting time based on seconds since last frame
@@ -44,6 +43,11 @@ public abstract class Bullet : MonoBehaviour {
 		}
     }
 
+    private Vector3 oldVelocity;
+    protected virtual void FixedUpdate() {
+        oldVelocity = gameObject.GetComponent<Rigidbody>().velocity;
+    }
+
     //Called on hit with anything. 
     public abstract void onHit(Collider obj);
 
@@ -51,12 +55,28 @@ public abstract class Bullet : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    private void OnTriggerEnter(Collider obj) {
-        //automatically preventing bullets from coliding with the player
-        if (obj.tag == "Player") {//hoping the player actually has this as it's tag...
+    private void OnTriggerEnter(Collider collider) {
+        //automatically preventing bullets from coliding with the player or other bullets of the same type. 
+        if (collider.gameObject.name == "Player" || collider.gameObject.name == this.GetType().Name) {
             return;
         }
-        onHit(obj);
+
+        //TODO: talk about implications of having a rigidbody world
+        if (bouncy) { //creating bouncy objects is difficult without world objects having a rigidbody.
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, transform.forward, out hit)) {
+                //calculating reflection
+                Vector3 reflectedVelocity = Vector3.Reflect(oldVelocity, hit.normal);
+                gameObject.GetComponent<Rigidbody>().velocity = reflectedVelocity;
+
+                //rotating object.
+                Quaternion rotation = Quaternion.FromToRotation(oldVelocity, reflectedVelocity);
+                transform.rotation = rotation * transform.rotation;
+            }
+        }
+        
+        onHit(collider);
     }
 
 }
