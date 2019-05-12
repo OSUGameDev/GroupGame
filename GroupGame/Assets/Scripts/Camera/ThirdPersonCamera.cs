@@ -6,9 +6,10 @@ public class ThirdPersonCamera : MonoBehaviour
 {
     /********** Parameters **********/
 
-    public Transform target;
+    public Transform target, player;
     public float rotate_speed;
 
+    private CharacterMovement player_script;
     private float MouseX, MouseY;
     private Quaternion rotationStart, rotationEnd;
     private bool isAim, isLock;
@@ -34,6 +35,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
         //This part is the camera rotate part
         {
+            //Get the user rotation input
             this.MouseX += Input.GetAxis("Mouse X") * this.rotate_speed * Time.deltaTime;
             this.MouseY -= Input.GetAxis("Mouse Y") * this.rotate_speed * Time.deltaTime;
             this.MouseY = Mathf.Clamp(this.MouseY, -35, 60);
@@ -41,6 +43,7 @@ public class ThirdPersonCamera : MonoBehaviour
             rotationStart = transform.rotation;
             //Find the target rotation which we're going to
             rotationEnd = Quaternion.Euler(this.MouseY, this.MouseX, 0f);
+            //Smooth rotate the camera
             this.target.rotation = Quaternion.Lerp(rotationStart, rotationEnd, 1.0f);
         }
 
@@ -52,12 +55,10 @@ public class ThirdPersonCamera : MonoBehaviour
         }
         else
         {
-
-            Transform player = this.transform.parent.transform.parent;
             Quaternion start, end;
-            start = player.rotation;
+            start = this.player.rotation;
             end = Quaternion.Euler(0f, this.MouseX, 0f);
-            player.rotation = Quaternion.Lerp(start, end, 1.0f);
+            this.player.rotation = Quaternion.Lerp(start, end, 1.0f);
         }
     }
 
@@ -82,25 +83,28 @@ public class ThirdPersonCamera : MonoBehaviour
         isAim = false;
         isLock = false;
         cam = GetComponent<Camera>();
+        player_script = player.GetComponent<CharacterMovement>();
 	}
 
     void Update()
     {
         if(Input.GetMouseButton(1))
         {
-            isAim = true;
+            this.isAim = true;
         }
         else
         {
-            isAim = false;
+            this.isAim = false;
         }
+        this.player_script.setAim(this.isAim);
 
-        if(isAim)
+        if (isAim)
         {
             if(Input.GetButtonDown("LockOn"))
             {
                 Debug.Log("Lock!");
                 isLock = true;
+                isAim = true;
             }
         }
     }

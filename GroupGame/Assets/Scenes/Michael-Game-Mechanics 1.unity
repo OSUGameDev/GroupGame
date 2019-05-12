@@ -1227,6 +1227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 943608758}
+  player: {fileID: 1967763094}
   rotate_speed: 200
 --- !u!81 &259577877
 AudioListener:

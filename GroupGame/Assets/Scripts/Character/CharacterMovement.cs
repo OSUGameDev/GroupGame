@@ -16,7 +16,7 @@ public class CharacterMovement : MonoBehaviour
     private float moveH, moveV;
     private Vector3 moveDirection = Vector3.zero;   //the direction the character should move.
     private Vector3 jumpDirection = Vector3.zero;
-    private bool isMove, isRun;
+    private bool isMove, isRun, isAim;
 
     private CharacterController controller;
     private Animator anim;
@@ -24,29 +24,17 @@ public class CharacterMovement : MonoBehaviour
     private ThirdPersonCamera cam;
 
 
-    //This built-in function will be called after the script first time loaded into the scene
-    void Start()
-    {
-        this.isMove = false;
-        this.isRun = false;
-
-        Cursor.visible = false;
-
-        this.controller = GetComponent<CharacterController>();
-        this.anim = GetComponent<Animator>();
-        this.cam = this.transform.GetChild(2).GetComponentInChildren<ThirdPersonCamera>();
-    }
-
     ///The check to see if the character is currently on the ground.
-    private bool isGrounded(){
+    private bool isGrounded()
+    {
         RaycastHit hit;
-        Physics.Raycast(this.transform.position, -this.transform.up,out hit, 10);   //A short ray shot directly downward from the center of the character.
+        Physics.Raycast(this.transform.position, -this.transform.up, out hit, 10);   //A short ray shot directly downward from the center of the character.
 
-        if(System.Math.Abs(hit.distance) < System.Single.Epsilon)                                           //if the distance is zero, the ray probably did not hit anything.
+        if (System.Math.Abs(hit.distance) < System.Single.Epsilon)                                           //if the distance is zero, the ray probably did not hit anything.
         {
             return false;
         }
-        if(hit.distance <= (this.transform.lossyScale.y/2 +GroundOffset))   //if the distance from the ray is less than half the height 
+        if (hit.distance <= (this.transform.lossyScale.y / 2 + GroundOffset))   //if the distance from the ray is less than half the height 
         {                                                                   //of the character (plus the offset), the character us grounded.
             return true;
         }
@@ -91,6 +79,25 @@ public class CharacterMovement : MonoBehaviour
         controller.Move(moveDirection * Time.deltaTime);    //move the character based on the gravitational force.
         jumpDirection.y -= gravity * Time.deltaTime;
         controller.Move(jumpDirection * Time.deltaTime);
+    }
+
+    public void setAim(bool Aim)
+    {
+        this.isAim = Aim;
+        this.anim.SetBool("isAim", this.isAim);
+    }
+
+    //This built-in function will be called after the script first time loaded into the scene
+    void Start()
+    {
+        this.isMove = false;
+        this.isRun = false;
+
+        Cursor.visible = false;
+
+        this.controller = GetComponent<CharacterController>();
+        this.anim = GetComponent<Animator>();
+        this.cam = this.transform.GetChild(2).GetComponentInChildren<ThirdPersonCamera>();
     }
 
     void Update()
