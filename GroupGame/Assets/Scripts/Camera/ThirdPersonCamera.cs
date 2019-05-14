@@ -21,33 +21,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     private void rotate()
     {
-        //This part sets the camera's local root position
-        if(!isAim)
-        {
-            //Change the camera base(local) position to normal 3rd person position
-            this.transform.localPosition = new Vector3(0f, 1.0f, -2.5f);
-        }
-        else
-        {
-            //Change the camera base(local) position to shoulder position
-            this.transform.localPosition = new Vector3(-0.8f, 0.75f, -1.2f);
-        }
-
-        //This part is the camera rotate part
-        {
-            //Get the user rotation input
-            this.MouseX += Input.GetAxis("Mouse X") * this.rotate_speed * Time.deltaTime;
-            this.MouseY -= Input.GetAxis("Mouse Y") * this.rotate_speed * Time.deltaTime;
-            this.MouseY = Mathf.Clamp(this.MouseY, -35, 60);
-            //Get the start position, which is the current position
-            rotationStart = transform.rotation;
-            //Find the target rotation which we're going to
-            rotationEnd = Quaternion.Euler(this.MouseY, this.MouseX, 0f);
-            //Smooth rotate the camera
-            this.target.rotation = Quaternion.Lerp(rotationStart, rotationEnd, 1.0f);
-        }
-
-        //This is the looking at part
+        /*****Camera's look at position*****/
         if (!isAim)
         {
             //Set the camera to focus on the player
@@ -59,6 +33,33 @@ public class ThirdPersonCamera : MonoBehaviour
             start = this.player.rotation;
             end = Quaternion.Euler(0f, this.MouseX, 0f);
             this.player.rotation = Quaternion.Lerp(start, end, 1.0f);
+        }
+
+        /*****Camera's rotation*****/
+        {
+            //Get the user rotation input
+            this.MouseX += Input.GetAxis("Mouse X") * this.rotate_speed * Time.deltaTime;
+            this.MouseY -= Input.GetAxis("Mouse Y") * this.rotate_speed * Time.deltaTime;
+            this.MouseY = Mathf.Clamp(this.MouseY, -35, 60);
+            //Get the start position, which is the current position
+            rotationStart = transform.rotation;
+            //Find the target rotation which we're going to
+            rotationEnd = Quaternion.Euler(this.MouseY, this.MouseX, 0f);
+            //Smooth rotate the camera
+            this.target.rotation = Quaternion.Lerp(rotationStart, rotationEnd, 0.5f);
+        }
+
+
+        /*****Camera's local root position*****/
+        if (!isAim)
+        {
+            //Change the camera base(local) position to normal 3rd person position
+            this.transform.localPosition = new Vector3(0f, 1.0f, -2.5f);
+        }
+        else
+        {
+            //Change the camera base(local) position to shoulder position
+            this.transform.localPosition = new Vector3(-0.8f, 0.75f, -1.2f);
         }
     }
 
