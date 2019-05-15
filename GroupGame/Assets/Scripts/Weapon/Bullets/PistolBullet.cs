@@ -12,7 +12,7 @@ public class PistolBullet : Bullet {
         maxExistTime = 10f;
     }
 
-    public override void onHit(Collider obj) {
+    public override void OnHit(Collider obj) {
         if (obj.tag == "Target Tester") {//doesn't actually work all the time?
             obj.GetComponent<EnemyHealth>().TakeDamage(damage);
             Destruct();

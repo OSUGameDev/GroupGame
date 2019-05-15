@@ -34,7 +34,7 @@ public class LaserBullet : Bullet {
 	}
 
 
-	public override void onHit(Collider obj) {
+	public override void OnHit(Collider obj) {
 		if(obj.tag == "Target Tester" || obj.tag == "Enemy") {
 			Destruct();
 		}
