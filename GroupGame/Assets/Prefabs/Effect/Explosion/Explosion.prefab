@@ -203,8 +203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a215688e311b93046bd1b1366e5f0815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 1000
-  explosion_radius: 100
+  power: 5000
+  explosion_radius: 1
 --- !u!135 &135230608085787222
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -2758,7 +2758,7 @@ ParticleSystem:
     strength:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 7.99
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -2915,7 +2915,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     separateAxes: 0
-    frequency: 0.5
+    frequency: 10.4
     damping: 1
     octaves: 1
     octaveMultiplier: 0.5
