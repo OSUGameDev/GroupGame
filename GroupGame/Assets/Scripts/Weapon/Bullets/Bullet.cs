@@ -7,7 +7,7 @@ public abstract class Bullet : MonoBehaviour {
 
     //TODO: Move this to some static class that contains info like this. 
     //or maybe create some function that handles layer numbers using hashmaps or something
-    private byte bulletIgnoreLayer = 17;
+    protected const byte BULLET_IGNORE_LAYER = 17;
     protected float existTime = 0f;
 
 //BASIC VARS 
@@ -46,7 +46,7 @@ public abstract class Bullet : MonoBehaviour {
 
         gameObject.name = this.GetType().Name; //will need to edit tag later to include playerID to allow collisions with other bullets.
         gameObject.GetComponent<Rigidbody>().velocity *= speed;
-        gameObject.layer = bulletIgnoreLayer;
+        gameObject.layer = BULLET_IGNORE_LAYER;
 
         if (bouncy) {//fixes issue where bouncy can 
             CheckBounce();
@@ -94,7 +94,7 @@ public abstract class Bullet : MonoBehaviour {
         RaycastHit hit;
 
         //raycast ignores the 'bulletIgnore' layer, only checks within 0.5f distance in front of the bullet
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 0.35f, bulletIgnoreLayer)) {
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 0.35f, BULLET_IGNORE_LAYER)) {
             if (!hit.collider) {//don't bounce if object is not a collider.
                 return;
             }

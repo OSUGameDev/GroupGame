@@ -20,7 +20,7 @@ public class LaserBullet : Bullet {
 
         float laserLength = 0;
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, maxLength)) {
+        if (Physics.Raycast(transform.position, transform.forward, out hit, maxLength, BULLET_IGNORE_LAYER)) {
             laserLength = Vector3.Distance(transform.position, hit.point);
             if(laserLength > maxLength) {
                 laserLength = maxLength;
@@ -30,7 +30,7 @@ public class LaserBullet : Bullet {
         }
 
         transform.localScale = new Vector3(transform.localScale.x, laserLength, transform.localScale.z);
-        transform.position += transform.forward * laserLength/2f;
+        transform.position += transform.forward * laserLength;
 	}
 
 
