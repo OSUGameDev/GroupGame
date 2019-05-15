@@ -13,13 +13,18 @@ public class RocketLauncher : MonoBehaviour
     public GameObject Rocket;      //The rocket object wait to be initiated
     public float rocket_speed = 50.0f;
 
-
+    private int bulletId; //workaround until this is changed to extend gun class.
 
     // Use this for initialization
     void Start()
     {
-        //playerCam = transform.parent.transform.GetChild(0).GetComponent<Camera>();
         pgo = GameObject.Find("PooledBullets").GetComponent<PooledGameObjects>();
+        bulletId = pgo.InitializeObjectType(Rocket);
+        
+
+        Debug.Log(pgo.ToString());
+        //playerCam = transform.parent.transform.GetChild(0).GetComponent<Camera>();
+        
     }
 
 
@@ -29,7 +34,7 @@ public class RocketLauncher : MonoBehaviour
         //Check if the player hit the fire button
         if (Input.GetButton("Fire1") && can_fire ==1)
         {
-            GameObject CR = pgo.GetPooledObject();
+            GameObject CR = pgo.GetPooledObject(bulletId);
             CR.transform.position = transform.position;
             CR.transform.rotation = transform.rotation;
             CR.SetActive(true);
@@ -49,5 +54,7 @@ public class RocketLauncher : MonoBehaviour
         }
 
     }
+
+
 
 }

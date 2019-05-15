@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Pistol : Gun {
-
-    
-
     // Use this for initialization
     protected override void Start () {
         base.Start();

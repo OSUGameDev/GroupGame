@@ -24,6 +24,10 @@ public class EnemyHealth : MonoBehaviour
     //This function will be called the first time this script been loaded into the scene.
     void Awake()
     {
+        if(gameObject != null) {
+            gameObject.layer = Bullet.BULLET_IGNORE_LAYER; //prevents bouncy bullets from bouncing off damagable objects, should be updated when bouncy code changes. 
+        }
+
         Current_Health = Start_Health;      //Initialize the player's health
 
         Anim = GetComponent<Animator>();        //Get the component

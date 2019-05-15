@@ -5,17 +5,18 @@ using UnityEditor;
 
 public abstract class Bullet : MonoBehaviour {
 
+//IDENTIFICATION VARS
     //TODO: Move this to some static class that contains info like this. 
     //or maybe create some function that handles layer numbers using hashmaps or something
-    protected const byte BULLET_IGNORE_LAYER = 17;
-    protected float existTime = 0f;
+    public const byte BULLET_IGNORE_LAYER = 17;
 
 //BASIC VARS 
 
     //use Reset() to set these in child classes!
     public int damage = 0;
     public float speed = 10f;
-    public float maxExistTime = 10f;
+    protected float existTime = 0f;
+    public float maxExistTime = 4f;
     //TODO: bullet dropoff? 
     
     public bool usesGravity = false;
@@ -25,30 +26,30 @@ public abstract class Bullet : MonoBehaviour {
     public int maxBounces = 2;
     private int currentBounces = 0;
 
-    
-
-
-
-
 //EXPLOSION VARS
     public bool explosive = false;
     public float explosionRadius = 0;
     public GameObject explosion; //default explosion loaded if one not provided, just ensure to call base.Start() in function override 
 
     
-    // Use this for initialization
+    // Please call this using base.Start in your override. 
     protected virtual void Start () {
+        gameObject.layer = BULLET_IGNORE_LAYER;
+        gameObject.name = this.GetType().Name; //will need to edit tag later to include playerID to allow collisions with other bullets.
+
         //making sure not to overwrite manually targeted explosion
         if (explosive && explosion == null) {
             //currently doesn't work, please drag explosion manually
             explosion = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefab/Effect/Explosion/Explosion", typeof(GameObject));
         }
+    }
 
-        gameObject.name = this.GetType().Name; //will need to edit tag later to include playerID to allow collisions with other bullets.
+    public void Reset() {
+        existTime = 0;
+        currentBounces = 0;
         gameObject.GetComponent<Rigidbody>().velocity *= speed;
-        gameObject.layer = BULLET_IGNORE_LAYER;
 
-        if (bouncy) {//fixes issue where bouncy can 
+        if (bouncy) {//fixes issue where gun shoots bullet next to a surface.
             CheckBounce();
         }
     }
@@ -74,7 +75,8 @@ public abstract class Bullet : MonoBehaviour {
     public abstract void OnHit(Collider obj);
 
     public virtual void Destruct() {
-        Destroy(gameObject);
+        this.gameObject.SetActive(false);
+        //Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider collider) {

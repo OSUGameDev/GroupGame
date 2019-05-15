@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PistolBullet : Bullet {
 
-    private void Reset() {
+    public void Reset() {
+        base.Reset();
         speed = 20f;
         damage = 20;
 
