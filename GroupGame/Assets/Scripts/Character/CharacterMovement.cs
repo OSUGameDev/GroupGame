@@ -88,6 +88,8 @@ public class CharacterMovement : MonoBehaviour
         {
             jumpDirection.y = jumpSpeed;     //Give a jump speed to player
         }
+        //Check if the player jumped
+        anim.SetBool("isGround", isGrounded());
 
 
         /*****Move the player*****/

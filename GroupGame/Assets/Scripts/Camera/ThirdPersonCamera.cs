@@ -63,15 +63,15 @@ public class ThirdPersonCamera : MonoBehaviour
         /*****Camera's local root position*****/
         if (!isAim && !isMelee)
         {
-            Debug.Log("Normal!");
-            Debug.Log(isLock);
+            //Debug.Log("Normal!");
+            //Debug.Log(isLock);
             //Change the camera base(local) position to normal 3rd person position
             transform.localPosition = new Vector3(0f, 1.0f, -2.5f);
         }
         else
         {
-            Debug.Log("Shoulder!");
-            Debug.Log(isLock);
+            //Debug.Log("Shoulder!");
+            //Debug.Log(isLock);
             //Change the camera base(local) position to shoulder position
             transform.localPosition = new Vector3(-0.8f, 0.75f, -1.2f);
         }
