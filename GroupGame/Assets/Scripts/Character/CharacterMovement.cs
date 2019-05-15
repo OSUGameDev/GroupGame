@@ -41,6 +41,12 @@ public class CharacterMovement : MonoBehaviour
         return false;
     }
 
+    private void checkMove()
+    {
+        if (!isMove)
+            speed = ispeed;
+    }
+
     private void move()
     {
         /*****Get basic player input*****/  
@@ -49,7 +55,12 @@ public class CharacterMovement : MonoBehaviour
         if (moveH != 0 || moveV != 0)
         {
             isMove = true;
-            this.transform.rotation = Quaternion.Euler(0f, cam.getAngle(), 0f);
+            //Once the player start move, the forward direction should set same with camera.
+            //In other word, the mouse should now be able to rotate the player
+            if(!cam.checkLock())
+            {
+                transform.rotation = Quaternion.Euler(0f, cam.getAngle(), 0f);
+            }
         }
         else
         {
@@ -60,17 +71,6 @@ public class CharacterMovement : MonoBehaviour
         moveDirection = transform.TransformDirection(moveDirection);      //Transform the moveMent from local space to world space
         moveDirection *= speed;      //Based on base speed
 
-
-        /*****Check the current status mode*****/
-        /* Normal, Aim, Melee
-         */
-        if (Input.GetButtonDown("Melee"))
-        {
-            //If the player enter the melee mode
-            isMelee = !isMelee;
-            anim.SetBool("isMelee", isMelee);
-        }
-
         /*****Check current movement mode*****/
         /* Walking, Running
          */
@@ -80,9 +80,8 @@ public class CharacterMovement : MonoBehaviour
             if(isRun)
                 speed *= 3;
             else
-                speed /= 3;
+                speed = ispeed;     //Set the speed back to initial
         }
-
 
         /*****Check jump mode at last*****/
         if (Input.GetButtonDown("Jump"))               //jump if the character is grounded and the user presses the jump button.
@@ -110,6 +109,12 @@ public class CharacterMovement : MonoBehaviour
         anim.SetBool("isAim", isAim);
     }
 
+    public void setMelee(bool Melee)
+    {
+        isMelee = Melee;
+        anim.SetBool("isMelee", isMelee);
+    }
+
     //This built-in function will be called after the script first time loaded into the scene
     void Start()
     {
@@ -127,6 +132,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
+        checkMove();
         move();
     }
 

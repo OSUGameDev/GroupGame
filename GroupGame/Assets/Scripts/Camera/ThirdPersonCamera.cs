@@ -12,7 +12,7 @@ public class ThirdPersonCamera : MonoBehaviour
     private CharacterMovement player_script;
     private float MouseX, MouseY;
     private Quaternion rotationStart, rotationEnd;
-    private bool isAim, isLock;
+    private bool isAim, isLock, isMelee;
     private Camera cam;
     private GameObject lock_target;
 
@@ -22,58 +22,74 @@ public class ThirdPersonCamera : MonoBehaviour
     private void rotate()
     {
         /*****Camera's look at position*****/
-        if (!isAim)
+        if (!isAim && !isMelee)
         {
-            //Set the camera to focus on the player
-            this.transform.LookAt(this.target);
+            //Set the camera to focus on the player,
+            //this should only affect the normal mode (neither melee nor aim)
+            transform.LookAt(target);
+        }
+        else if(isLock)
+        {
+            //Look at the target
+            transform.LookAt(lock_target.transform.position);
+            Vector3 dir = lock_target.transform.position - player.position;
+            player.forward = new Vector3(dir.x, 0f, dir.z);
         }
         else
         {
+            //If in melee or aim mode, rotate the player with camera
             Quaternion start, end;
-            start = this.player.rotation;
-            end = Quaternion.Euler(0f, this.MouseX, 0f);
-            this.player.rotation = Quaternion.Lerp(start, end, 1.0f);
+            start = player.rotation;
+            end = Quaternion.Euler(0f, MouseX, 0f);
+            player.rotation = Quaternion.Lerp(start, end, 1.0f);
         }
 
         /*****Camera's rotation*****/
+        if(!isLock)
         {
             //Get the user rotation input
-            this.MouseX += Input.GetAxis("Mouse X") * this.rotate_speed * Time.deltaTime;
-            this.MouseY -= Input.GetAxis("Mouse Y") * this.rotate_speed * Time.deltaTime;
-            this.MouseY = Mathf.Clamp(this.MouseY, -35, 60);
+            MouseX += Input.GetAxis("Mouse X") * rotate_speed * Time.deltaTime;
+            MouseY -= Input.GetAxis("Mouse Y") * rotate_speed * Time.deltaTime;
+            MouseY = Mathf.Clamp(MouseY, -90, 25);
             //Get the start position, which is the current position
             rotationStart = transform.rotation;
             //Find the target rotation which we're going to
-            rotationEnd = Quaternion.Euler(this.MouseY, this.MouseX, 0f);
+            rotationEnd = Quaternion.Euler(MouseY, MouseX, 0f);
             //Smooth rotate the camera
-            this.target.rotation = Quaternion.Lerp(rotationStart, rotationEnd, 0.5f);
+            target.rotation = Quaternion.Lerp(rotationStart, rotationEnd, 0.5f);
         }
 
 
         /*****Camera's local root position*****/
-        if (!isAim)
+        if (!isAim && !isMelee)
         {
+            Debug.Log("Normal!");
+            Debug.Log(isLock);
             //Change the camera base(local) position to normal 3rd person position
-            this.transform.localPosition = new Vector3(0f, 1.0f, -2.5f);
+            transform.localPosition = new Vector3(0f, 1.0f, -2.5f);
         }
         else
         {
+            Debug.Log("Shoulder!");
+            Debug.Log(isLock);
             //Change the camera base(local) position to shoulder position
-            this.transform.localPosition = new Vector3(-0.8f, 0.75f, -1.2f);
+            transform.localPosition = new Vector3(-0.8f, 0.75f, -1.2f);
         }
     }
 
     public float getAngle()
     {
-        return this.MouseX;
+        return MouseX;
     }
 
-    public void lockOn()
+    public Transform getTarget()
     {
-        //Set the shoulder view
-        this.transform.localPosition = new Vector3(-0.8f, 0.75f, -1.2f);
-        this.transform.LookAt(lock_target.transform.position);
+        return lock_target.transform;
+    }
 
+    public bool checkLock()
+    {
+        return isLock;
     }
 
     /********** Build in Functions **********/
@@ -83,29 +99,61 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         isAim = false;
         isLock = false;
+        isMelee = false;
         cam = GetComponent<Camera>();
         player_script = player.GetComponent<CharacterMovement>();
 	}
 
     void Update()
     {
+        //Check if the player enter aim mode
         if(Input.GetMouseButton(1))
         {
-            this.isAim = true;
+            //Change the flag
+            isAim = true;
+            //Change player's animation
+            player_script.setAim(true);
         }
         else
         {
-            this.isAim = false;
+            isAim = false;
         }
-        this.player_script.setAim(this.isAim);
+        player_script.setAim(isAim);
 
-        if (isAim)
+        //Check if player enter melee mode
+        if (Input.GetButtonDown("Melee"))
         {
+            //Change the flag
+            isMelee = !isMelee;
+        }
+        player_script.setMelee(isMelee);
+
+        //Check if player enter the lock mode
+        if (isMelee)
+        {
+            //Only the melee mode could lock on target
             if(Input.GetButtonDown("LockOn"))
             {
-                Debug.Log("Lock!");
-                isLock = true;
-                isAim = true;
+                //Change the flag
+                isLock = !isLock;
+                if(isLock)      //If enter the lock mode
+                {
+                    //Find the target
+                    Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.collider.tag == "Target Tester")
+                        {
+                            lock_target = hit.collider.gameObject;
+                        }
+                    }
+                }
+                else    //If leave the lock mode
+                {
+                    //In case the camera's z rotation has change, set it to 0
+                    transform.localRotation = Quaternion.Euler(21.801f, 0f, 0f);
+                }
             }
         }
     }
@@ -113,22 +161,6 @@ public class ThirdPersonCamera : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate ()
     {
-        if(!isLock)
-        {
-            rotate();
-        }
-        else
-        {
-            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.collider.tag == "Target Tester")
-                {
-                    lock_target = hit.collider.gameObject;
-                }
-            }
-            lockOn();
-        }
+        rotate();
 	}
 }
