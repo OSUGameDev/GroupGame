@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public float speed = 3.0F;          //the moving speed of the character
+    public float ispeed, speed = 2.0F;          //the moving speed of the character
     public float jumpSpeed = 10.0f;      //the jump force of the character
 
     public float gravity = 20.0f;       //the force of gravity on the character
@@ -16,7 +16,7 @@ public class CharacterMovement : MonoBehaviour
     private float moveH, moveV;
     private Vector3 moveDirection = Vector3.zero;   //the direction the character should move.
     private Vector3 jumpDirection = Vector3.zero;
-    private bool isMove, isRun;
+    private bool isMove, isRun, isAim, isMelee;
 
     private CharacterController controller;
     private Animator anim;
@@ -24,29 +24,17 @@ public class CharacterMovement : MonoBehaviour
     private ThirdPersonCamera cam;
 
 
-    //This built-in function will be called after the script first time loaded into the scene
-    void Start()
-    {
-        this.isMove = false;
-        this.isRun = false;
-
-        Cursor.visible = false;
-
-        this.controller = GetComponent<CharacterController>();
-        this.anim = GetComponent<Animator>();
-        this.cam = this.transform.GetChild(2).GetComponentInChildren<ThirdPersonCamera>();
-    }
-
     ///The check to see if the character is currently on the ground.
-    private bool isGrounded(){
+    private bool isGrounded()
+    {
         RaycastHit hit;
-        Physics.Raycast(this.transform.position, -this.transform.up,out hit, 10);   //A short ray shot directly downward from the center of the character.
+        Physics.Raycast(this.transform.position, -this.transform.up, out hit, 10);   //A short ray shot directly downward from the center of the character.
 
-        if(System.Math.Abs(hit.distance) < System.Single.Epsilon)                                           //if the distance is zero, the ray probably did not hit anything.
+        if (System.Math.Abs(hit.distance) < System.Single.Epsilon)                                           //if the distance is zero, the ray probably did not hit anything.
         {
             return false;
         }
-        if(hit.distance <= (this.transform.lossyScale.y/2 +GroundOffset))   //if the distance from the ray is less than half the height 
+        if (hit.distance <= (this.transform.lossyScale.y / 2 + GroundOffset))   //if the distance from the ray is less than half the height 
         {                                                                   //of the character (plus the offset), the character us grounded.
             return true;
         }
@@ -55,7 +43,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void move()
     {
-        // Move the character   
+        /*****Get basic player input*****/  
         moveH = Input.GetAxis("Horizontal");
         moveV = Input.GetAxis("Vertical");
         if (moveH != 0 || moveV != 0)
@@ -68,29 +56,73 @@ public class CharacterMovement : MonoBehaviour
             isMove = false;
             isRun = false;
         }
-
         moveDirection = new Vector3(moveH, 0.0f, moveV);       //Create the player's movement from keyboard in local space
         moveDirection = transform.TransformDirection(moveDirection);      //Transform the moveMent from local space to world space
         moveDirection *= speed;      //Based on base speed
-        if (Input.GetButtonDown("Run"))
+
+
+        /*****Check the current status mode*****/
+        /* Normal, Aim, Melee
+         */
+        if (Input.GetButtonDown("Melee"))
         {
-            this.isRun = !this.isRun;
-            moveDirection *= speed;
+            //If the player enter the melee mode
+            isMelee = !isMelee;
+            anim.SetBool("isMelee", isMelee);
         }
 
-        anim.SetFloat("Horizontal", moveH);
-        anim.SetFloat("Vertical", moveV);
-        anim.SetBool("isMove", isMove);
-        anim.SetBool("isRun", isRun);
+        /*****Check current movement mode*****/
+        /* Walking, Running
+         */
+        if (Input.GetButtonDown("Run"))
+        {
+            isRun = !isRun;
+            if(isRun)
+                speed *= 3;
+            else
+                speed /= 3;
+        }
 
+
+        /*****Check jump mode at last*****/
         if (Input.GetButtonDown("Jump"))               //jump if the character is grounded and the user presses the jump button.
         {
             jumpDirection.y = jumpSpeed;     //Give a jump speed to player
         }
 
+
+        /*****Move the player*****/
         controller.Move(moveDirection * Time.deltaTime);    //move the character based on the gravitational force.
         jumpDirection.y -= gravity * Time.deltaTime;
         controller.Move(jumpDirection * Time.deltaTime);
+
+
+        /*****Set the animator*****/
+        anim.SetFloat("Horizontal", moveH);
+        anim.SetFloat("Vertical", moveV);
+        anim.SetBool("isMove", isMove);
+        anim.SetBool("isRun", isRun);
+    }
+
+    public void setAim(bool Aim)
+    {
+        isAim = Aim;
+        anim.SetBool("isAim", isAim);
+    }
+
+    //This built-in function will be called after the script first time loaded into the scene
+    void Start()
+    {
+        isMove = false;
+        isRun = false;
+
+        Cursor.visible = false;
+
+        controller = GetComponent<CharacterController>();
+        anim = GetComponent<Animator>();
+        cam = transform.GetChild(2).GetComponentInChildren<ThirdPersonCamera>();
+
+        ispeed = speed;
     }
 
     void Update()
