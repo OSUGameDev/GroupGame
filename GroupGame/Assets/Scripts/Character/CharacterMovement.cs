@@ -127,7 +127,7 @@ public class CharacterMovement : MonoBehaviour
 
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
-        cam = transform.GetChild(2).GetComponentInChildren<ThirdPersonCamera>();
+        cam = transform.GetChild(1).GetComponentInChildren<ThirdPersonCamera>();
 
         ispeed = speed;
     }
