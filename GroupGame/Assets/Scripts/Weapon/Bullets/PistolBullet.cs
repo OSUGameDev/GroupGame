@@ -4,20 +4,27 @@ using UnityEngine;
 
 public class PistolBullet : Bullet {
 
-    public override void onHit(Collider obj) {
-        if(obj.tag != "Player") {//hoping the player actually has this as it's tag...
-            if(obj.tag == "Target Tester") {//doesn't actually work all the time?
-                obj.GetComponent<EnemyHealth>().TakeDamage(damage);
-            }
-            Destroy(gameObject);
+    public void Reset() {
+        base.Reset();
+        speed = 20f;
+        damage = 20;
+
+        explosive = false;
+        maxExistTime = 10f;
+    }
+
+    public override void OnHit(Collider obj) {
+        if (obj.tag == "Target Tester") {//doesn't actually work all the time?
+            obj.GetComponent<EnemyHealth>().TakeDamage(damage);
+            Destruct();
         }
+        
     }
 
     // Use this for initialization
     protected override void Start() {
-        this.speed = 100f;
-        this.damage = 20;
         base.Start();
     }
+    
 
 }
