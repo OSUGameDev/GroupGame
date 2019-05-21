@@ -12,16 +12,19 @@ public class CharacterMovement : MonoBehaviour
     public float gravity = 20.0f;       //the force of gravity on the character
 
     public float GroundOffset = .2f;    //the offset for the IsGrounded check. Useful for recognizing slopes and imperfect ground.
+    public GameObject Sword;
 
     private float moveH, moveV;
     private Vector3 moveDirection = Vector3.zero;   //the direction the character should move.
     private Vector3 jumpDirection = Vector3.zero;
-    private bool isMove, isRun, isAim, isMelee;
+    private bool isMove, isRun, isAim, isMelee, swordMove;
 
     private CharacterController controller;
     private Animator anim;
 
     private ThirdPersonCamera cam;
+
+    private Transform sword;
 
 
     ///The check to see if the character is currently on the ground.
@@ -105,6 +108,29 @@ public class CharacterMovement : MonoBehaviour
         anim.SetBool("isRun", isRun);
     }
 
+    private void warpStrike()
+    {
+        anim.Play("Throwing",0);
+    }
+
+    public void off()
+    {
+        Transform sword = Sword.transform;
+        Sword.transform.parent = null;
+
+        controller.enabled = false;
+        anim.enabled = false;
+
+        Sword.transform.up = cam.getTarget().position - transform.position;
+        swordMove = true;
+        
+    }
+
+    public void warp()
+    {
+
+    }
+
     public void setAim(bool Aim)
     {
         isAim = Aim;
@@ -122,6 +148,7 @@ public class CharacterMovement : MonoBehaviour
     {
         isMove = false;
         isRun = false;
+        swordMove = false;
 
         Cursor.visible = false;
 
@@ -130,12 +157,25 @@ public class CharacterMovement : MonoBehaviour
         cam = transform.GetChild(1).GetComponentInChildren<ThirdPersonCamera>();
 
         ispeed = speed;
+
+        sword = Sword.transform;
     }
 
     void Update()
     {
+        if (Input.GetButtonDown("Strike"))
+            warpStrike();
         checkMove();
         move();
+
+        if (swordMove)
+        {
+            Sword.transform.position = Vector3.MoveTowards(Sword.transform.position, cam.getTarget().position, 20 * Time.deltaTime);
+            if(Sword.transform.position == cam.getTarget().position)
+            {
+                warp();
+            }
+        }
     }
 
 }
