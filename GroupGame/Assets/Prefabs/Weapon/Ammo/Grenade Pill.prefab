@@ -213,12 +213,12 @@ MonoBehaviour:
   damage: 50
   speed: 30
   maxExistTime: 2
-  usesGravity: 0
   bouncy: 0
   maxBounces: 2
   explosive: 1
   explosionRadius: 0
-  explosion: {fileID: 1774397570345800, guid: 662b2666f99127a4ca4293f8ae7936ce, type: 2}
+  explosionObj: {fileID: 1774397570345800, guid: 662b2666f99127a4ca4293f8ae7936ce,
+    type: 2}
 --- !u!136 &136342325341958642
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -18,35 +18,50 @@ public abstract class Bullet : MonoBehaviour {
     protected float existTime = 0f;
     public float maxExistTime = 4f;
     //TODO: bullet dropoff? 
-    
-    public bool usesGravity = false;
 
 //BOUNCE VARS
     public bool bouncy = false;
     public int maxBounces = 2;
-    private int currentBounces = 0;
+    protected int currentBounces = 0;
 
 //EXPLOSION VARS
+    protected PooledGameObjects pgo;
+    protected int explosionId;
+
     public bool explosive = false;
     public float explosionRadius = 0;
-    public GameObject explosion; //default explosion loaded if one not provided, just ensure to call base.Start() in function override 
+    public GameObject explosionObj; //default explosion loaded if one not provided, just ensure to call base.Start() in function override 
 
-    
+ 
+
     // Please call this using base.Start in your override. 
     protected virtual void Start () {
         gameObject.layer = BULLET_IGNORE_LAYER;
         gameObject.name = this.GetType().Name; //will need to edit tag later to include playerID to allow collisions with other bullets.
 
+        ;
+
         //making sure not to overwrite manually targeted explosion
-        if (explosive && explosion == null) {
-            //currently doesn't work, please drag explosion manually
-            explosion = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefab/Effect/Explosion/Explosion", typeof(GameObject));
+        if (explosive) {
+            if (explosionObj == null) {
+                //currently doesn't work, please drag explosion manually
+                explosionObj = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefab/Effect/Explosion/Explosion", typeof(GameObject));
+            }
+
+            pgo = GameObject.Find("PooledBullets").GetComponent<PooledGameObjects>();
+            explosionId = pgo.InitializeObjectType(explosionObj);
         }
     }
 
-    public void Reset() {
+    /// <summary>
+    /// This is used by the Unity Editor to set the UI to match these vars, useful when you want the child class to have different default values for these things.
+    /// Use this when you want to reset the bullet. 
+    /// </summary>
+    public virtual void Reset() {
         existTime = 0;
         currentBounces = 0;
+
+        //default velocity is set by gun class using the camera.
         gameObject.GetComponent<Rigidbody>().velocity *= speed;
 
         if (bouncy) {//fixes issue where gun shoots bullet next to a surface.
@@ -63,10 +78,10 @@ public abstract class Bullet : MonoBehaviour {
 		}
     }
 
-    private Vector3 oldVelocity;
+    private Vector3 oldVelocity; //this is only used with bullet bounces.
     protected virtual void FixedUpdate() {
         if (bouncy) { //needs to run here because normal collision sucks
-            oldVelocity = gameObject.GetComponent<Rigidbody>().velocity; //this is only used with bullet bounces.
+            oldVelocity = gameObject.GetComponent<Rigidbody>().velocity;
             CheckBounce();
         }
     }
@@ -74,15 +89,22 @@ public abstract class Bullet : MonoBehaviour {
     //Called on hit with anything. 
     public abstract void OnHit(Collider obj);
 
-    public virtual void Destruct() {
+    public void Destruct() {
+        if (explosive) {
+            explode();
+        }
+
         this.gameObject.SetActive(false);
-        //Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider collider) {
         //automatically preventing bullets from coliding with the player or other bullets of the same type. 
         if (collider.gameObject.name == "Player" || collider.gameObject.name == this.GetType().Name) {
             return;
+        }else if (collider.tag == "Target Tester" || collider.tag == "Enemy") { //only explodes if the bullet hits a valid enemy. 
+            if (explosive) { //calls explosion if 
+                explode();
+            }
         }
         
         OnHit(collider);
@@ -92,10 +114,10 @@ public abstract class Bullet : MonoBehaviour {
     /// Collision detection is to slow to accurately reflect bullets. So this is called in fixed update and raycasts x amt in front of the bullet.
     /// Currently has issues with bullet to fast. 
     /// </summary>
-    private void CheckBounce() { //TODO: Add code to 'backpedal' bullet to check if it already passed something it should've bounced on.
+    private void CheckBounce() {
         RaycastHit hit;
-
         //raycast ignores the 'bulletIgnore' layer, only checks within 0.5f distance in front of the bullet
+        //TODO: make max distance based on the speed of the bullet. Alse the bullet should be moved to the object it's bouncing off of, then reflected (will look much better). 
         if (Physics.Raycast(transform.position, transform.forward, out hit, 0.35f, BULLET_IGNORE_LAYER)) {
             if (!hit.collider) {//don't bounce if object is not a collider.
                 return;
@@ -113,6 +135,19 @@ public abstract class Bullet : MonoBehaviour {
             if(currentBounces > maxBounces) {
                 Destruct();
             }
+        }
+    }
+
+    protected void explode() {
+        if (explosionObj != null) { //calls explosion if 
+            GameObject exp = pgo.GetPooledObject(explosionId);
+            exp.transform.position = transform.position;
+            exp.transform.rotation = transform.rotation;
+            exp.GetComponent<Explosion>().Reset(); //very important!!!
+
+            exp.SetActive(true);
+        } else {
+            Debug.Log("Explosion not defined for this object: " + this.name);
         }
     }
 

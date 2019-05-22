@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class GrenadeBullet : Bullet {
 
-	private int explosionId;
-	private PooledGameObjects pgo;
-
-    public void Reset() {
+    public override void Reset() {
         base.Reset();
+
         damage = 50;
         explosive = true;
         maxExistTime = 2f;
@@ -18,8 +16,6 @@ public class GrenadeBullet : Bullet {
     // Use this for initialization
     protected override void Start () {
         base.Start();
-		pgo = GameObject.Find("PooledBullets").GetComponent<PooledGameObjects>();
-		explosionId = pgo.InitializeObjectType(explosion);
 	}
 	
 
@@ -28,14 +24,5 @@ public class GrenadeBullet : Bullet {
             Destruct();
         }
     }
-
-    public override void Destruct() {
-		GameObject exp = pgo.GetPooledObject(explosionId);
-		exp.transform.position = transform.position;
-		exp.transform.rotation = transform.rotation;
-		exp.GetComponent<Explosion>().Reset();
-		exp.SetActive(true);
-
-        this.gameObject.SetActive(false);
-    }
+    
 }

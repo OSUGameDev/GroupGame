@@ -8,6 +8,7 @@ public class Explosion : MonoBehaviour
     public float explosion_radius;      //The explosion radius
     private float explosion_time = 10.0f;       //The time that this object will exist in the scene
 
+
     // Use this for initialization
     void Start (){
 		Reset ();
@@ -23,7 +24,10 @@ public class Explosion : MonoBehaviour
 			}
 		}
 		explosion_time = 10f;
-	}
+
+        //NOTE: Explosion particles are enabled to loop, which makes them reset when reactivated. 
+
+    }
 	
 	// Update is called once per frame
 	void Update ()

@@ -6,8 +6,9 @@ public class LaserBullet : Bullet {
 
     public float maxLength = 5000f;
 
-    public void Reset() {
+    public override void Reset() {
         base.Reset();
+
 		damage = 50;
 		explosive = false;
 		maxExistTime = 2f;
