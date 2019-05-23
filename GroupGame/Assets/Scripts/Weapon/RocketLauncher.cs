@@ -8,7 +8,7 @@ public class RocketLauncher : MonoBehaviour
     private float fire_rate = 0.3f;         //How long for a singla fire exists
     private int can_fire = 1;               //If the player fired
 
-    private Camera playerCam;
+    public Camera playerCam;
 
     public GameObject Rocket;      //The rocket object wait to be initiated
     public float rocket_speed = 50.0f;
@@ -39,7 +39,20 @@ public class RocketLauncher : MonoBehaviour
             CR.transform.rotation = transform.rotation;
             CR.SetActive(true);
             //GameObject CR = Instantiate(Rocket, transform.position, transform.rotation);        //Instantiate the rocket object at current position and current angle
-            CR.GetComponent<Rigidbody>().velocity = transform.forward * rocket_speed;       //Set the speed
+
+            //Debug.DrawLine(Vector3.zero, new Vector3(0, 10, 0), Color.green, 10.0f);
+
+            Ray ray = playerCam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                Debug.DrawLine(transform.position, hit.point, Color.white, 10.0f);
+                CR.GetComponent<Rigidbody>().velocity = hit.point - transform.position;
+            }
+            else
+            {
+                CR.GetComponent<Rigidbody>().velocity = transform.forward * rocket_speed;    //speed multiplier added inside bullet object.
+            }
             can_fire = 0;
         }
 

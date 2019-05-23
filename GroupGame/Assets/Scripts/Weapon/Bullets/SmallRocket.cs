@@ -30,7 +30,9 @@ public class SmallRocket : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(life_time >= 0.05f)      //This was used to prevent collide with the player's collider, will be fixed later
+        //Debug.Log("Rocket hit!");
+        Debug.Log(collision.collider.name);
+        if(life_time >= 0.5f)      //This was used to prevent collide with the player's collider, will be fixed later
         {
             Instantiate(explosion, transform.position, transform.rotation);
             life_time = 0.0f;
