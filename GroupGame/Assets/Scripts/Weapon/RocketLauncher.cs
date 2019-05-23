@@ -7,8 +7,8 @@ public class RocketLauncher : Gun
 
     public void Reset() {
         coolDownMS = 1000f;
-}
-
+    }
+    
     protected override void FireProjectile() {
         base.FireProjectile();
     }
