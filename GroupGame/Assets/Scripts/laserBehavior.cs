@@ -15,9 +15,7 @@ public class laserBehavior : MonoBehaviour
     public float fireDistance = 50;
     void Start()
     {
-        target = transform.parent.gameObject.GetComponent<EnemyAI>().currentTarget;
-        fireTowards = target.transform.position;
-        transform.LookAt(target.transform.position);
+        
     }
 
     // Update is called once per frame
