@@ -6,7 +6,6 @@ using UnityEngine;
 public abstract class Gun : MonoBehaviour {
 
     private PooledGameObjects pgo;
-
     private long lastFireMS = 0;
     protected bool customFireSequence = false; //set this to true in child to disable default firing functionality
 
@@ -61,6 +60,7 @@ public abstract class Gun : MonoBehaviour {
         {
             bullet.GetComponent<Rigidbody>().velocity = playerCam.transform.forward;    //speed multiplier added inside bullet object.
         }
+
         bullet.GetComponent<Bullet>().Reset();
         
 
