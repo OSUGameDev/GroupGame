@@ -9,6 +9,7 @@ public abstract class Bullet : MonoBehaviour {
     //TODO: Move this to some static class that contains info like this. 
     //or maybe create some function that handles layer numbers using hashmaps or something
     public const byte BULLET_IGNORE_LAYER = 17;
+	private const float RAYCAST_RATIO = 0.45f / 20f; //a decent ratio used to linearly calucalate how far the bounce raycast should scan.
 
 //BASIC VARS 
 
@@ -21,8 +22,10 @@ public abstract class Bullet : MonoBehaviour {
 
 //BOUNCE VARS
     public bool bouncy = false;
-    public int maxBounces = 2;
+    public int maxBounces = 12;
     protected int currentBounces = 0;
+	private float raycastDistance = 0; //how far it scans for an objcet to bounce off of
+
 
 //EXPLOSION VARS
     protected PooledGameObjects pgo;
@@ -67,6 +70,8 @@ public abstract class Bullet : MonoBehaviour {
         if (bouncy) {//fixes issue where gun shoots bullet next to a surface.
             CheckBounce();
         }
+
+		raycastDistance = RAYCAST_RATIO * speed;
     }
 
     protected virtual void Update() {
@@ -116,9 +121,9 @@ public abstract class Bullet : MonoBehaviour {
     /// </summary>
     private void CheckBounce() {
         RaycastHit hit;
-        //raycast ignores the 'bulletIgnore' layer, only checks within 0.5f distance in front of the bullet
+
         //TODO: make max distance based on the speed of the bullet. Alse the bullet should be moved to the object it's bouncing off of, then reflected (will look much better). 
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 0.35f, BULLET_IGNORE_LAYER)) {
+		if (Physics.Raycast(transform.position, transform.forward, out hit, raycastDistance, BULLET_IGNORE_LAYER)) {
             if (!hit.collider) {//don't bounce if object is not a collider.
                 return;
             }
@@ -131,10 +136,14 @@ public abstract class Bullet : MonoBehaviour {
             Quaternion rotation = Quaternion.FromToRotation(oldVelocity, reflectedVelocity);
             transform.rotation = rotation * transform.rotation;
 
+			this.transform.position = hit.point;
+
             currentBounces++;
             if(currentBounces > maxBounces) {
                 Destruct();
             }
+
+			CheckBounce ();
         }
     }
 
