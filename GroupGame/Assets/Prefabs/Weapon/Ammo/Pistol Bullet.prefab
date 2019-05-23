@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
-  speed: 50
+  speed: 10
   maxExistTime: 10
   usesGravity: 0
   bouncy: 1
