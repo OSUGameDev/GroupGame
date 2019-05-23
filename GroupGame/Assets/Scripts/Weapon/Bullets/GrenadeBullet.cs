@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class GrenadeBullet : Bullet {
 
-    public void Reset() {
+    public override void Reset() {
         base.Reset();
+
         damage = 50;
         explosive = true;
         maxExistTime = 2f;
-        speed = 10f;
+        speed = 30f;
     }
 
     // Use this for initialization
@@ -23,10 +24,5 @@ public class GrenadeBullet : Bullet {
             Destruct();
         }
     }
-
-    public override void Destruct() {
-        Instantiate(explosion, transform.position, transform.rotation);
-        this.gameObject.SetActive(false);
-        //Destroy(gameObject);
-    }
+    
 }

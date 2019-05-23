@@ -10,7 +10,11 @@ public class PooledGameObjects : MonoBehaviour {
 	[SerializeField]
 	private bool canGrow = true; 		//if the number of objects in the pool can grow or not
 
-	[SerializeField]
+    [SerializeField]
+    private bool allowDuplicateObjectNames = false; //if false, scans the list to see if any of the objects match the name of the inputted object, and returns that index if found.
+    //highly reccomended since rockets try to initialize the explosion in each initialization. 
+
+    [SerializeField]
 	private int pooledAmount = 10; 			//the number of objects in the pool
 
 	private List<List<GameObject>> pooledObjects;		//The pool of objects
@@ -63,6 +67,16 @@ public class PooledGameObjects : MonoBehaviour {
     /// <returns> ObjectId that will be used get a pooled object. </returns>
     public int InitializeObjectType(GameObject pooledObj)
     {
+        //ensuring that user doesn't reinitialize an object, which would be a moderate waste of resources.
+        if (!allowDuplicateObjectNames) {
+            for (int i = 0; i < pristeneObjects.Count; i++) {
+                if (pristeneObjects[i].name == pooledObj.name) { //might cause issues if not careful with object names.
+                    //Debug.Log("Warning: Object already initialized in PooledObjects. NameOfObject:" + pooledObj.name);
+                    return i;
+                }
+            }
+        }
+
         pristeneObjects.Add(pooledObj);
         pooledObjects.Add(new List<GameObject>());
         for (int i = 0; i < pooledAmount; i++)      //this loop creates the pooled objects and adds them to the pool (List) and deactivates them.

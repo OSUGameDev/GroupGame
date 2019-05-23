@@ -117,12 +117,11 @@ MonoBehaviour:
   damage: 20
   speed: 50
   maxExistTime: 10
-  usesGravity: 0
   bouncy: 1
   maxBounces: 2
   explosive: 0
   explosionRadius: 0
-  explosion: {fileID: 0}
+  explosionObj: {fileID: 0}
 --- !u!135 &135201303258281440
 SphereCollider:
   m_ObjectHideFlags: 1

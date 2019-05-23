@@ -210,7 +210,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d7893d72322bb4fab50c415e6244f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 1774397570345800, guid: 662b2666f99127a4ca4293f8ae7936ce, type: 2}
+  damage: 50
+  speed: 10
+  maxExistTime: 10
+  bouncy: 0
+  maxBounces: 2
+  explosive: 1
+  explosionRadius: 0
+  explosionObj: {fileID: 1774397570345800, guid: 662b2666f99127a4ca4293f8ae7936ce,
+    type: 2}
 --- !u!136 &136830681306151792
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -218,7 +226,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1756925887665082}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
@@ -4773,8 +4781,8 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 6f57e3384acd5dc45bb4df479f10466b, type: 2}
-  - {fileID: 2100000, guid: 33574fa1b36c9244ebeedb7e591ed39b, type: 2}
+  - {fileID: 2100000, guid: 9f3080141f1f64197825663e067f94f8, type: 2}
+  - {fileID: 2100000, guid: 9f3080141f1f64197825663e067f94f8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
