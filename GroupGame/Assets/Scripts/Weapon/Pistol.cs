@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Pistol : Gun {
     // Use this for initialization
-    protected override void Start () {
+    public override void Start () {
         base.Start();
 	}
 
@@ -13,7 +13,8 @@ public class Pistol : Gun {
     }
 
     //this function is unity one that sets the variables in the unity editor to this by default
-    public void Reset() {
+    public new void Reset() {
+        base.Reset();
         coolDownMS = 250f;
     }
 }

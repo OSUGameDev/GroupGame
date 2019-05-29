@@ -6880,6 +6880,10 @@ MonoBehaviour:
   jumpSpeed: 10
   gravity: 20
   GroundOffset: 0.2
+  Sword: {fileID: 0}
+  RightHand: {fileID: 0}
+  particle1: {fileID: 0}
+  particle2: {fileID: 0}
 --- !u!143 &143343351937569432
 CharacterController:
   m_ObjectHideFlags: 1

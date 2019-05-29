@@ -102,7 +102,6 @@ public class CharacterMovement : MonoBehaviour
         {
             jumpDirection.y -= gravity * Time.deltaTime;
         }
-        Debug.Log(jumpDirection);
         controller.Move(jumpDirection * Time.deltaTime);
 
         /*****Set the animator*****/

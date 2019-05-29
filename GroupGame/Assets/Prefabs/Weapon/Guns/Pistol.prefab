@@ -28,7 +28,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4748042072760898
 Transform:
   m_ObjectHideFlags: 1
@@ -97,3 +97,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletObj: {fileID: 1562605241979612, guid: bdfa223c8c8592d47a697b9adc0af750, type: 2}
   coolDownMS: 100
+  playerCam: {fileID: 0}
+  aim: {fileID: 0}

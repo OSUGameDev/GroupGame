@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 120849690440052798}
   - component: {fileID: 114783581582670860}
   m_Layer: 0
-  m_Name: 'Laser Gun '
+  m_Name: Laser Gun
   m_TagString: Laser Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,6 +96,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f72f239ccd22441a43d544d9021993, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletObj: {fileID: 0}
+  coolDownMS: 100
+  playerCam: {fileID: 0}
+  aim: {fileID: 0}
 --- !u!120 &120849690440052798
 LineRenderer:
   m_ObjectHideFlags: 1

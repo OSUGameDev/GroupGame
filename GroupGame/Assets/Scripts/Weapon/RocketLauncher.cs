@@ -5,7 +5,8 @@ using UnityEngine;
 public class RocketLauncher : Gun
 {
 
-    public void Reset() {
+    public new void Reset() {
+        base.Reset();
         coolDownMS = 1000f;
     }
     
@@ -14,7 +15,7 @@ public class RocketLauncher : Gun
     }
 
     // Use this for initialization
-    protected override void Start() {
+    public override void Start() {
         base.Start();
     }
     

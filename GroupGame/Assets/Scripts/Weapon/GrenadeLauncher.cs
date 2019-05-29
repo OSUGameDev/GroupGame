@@ -10,8 +10,9 @@ public class GrenadeLauncher : Gun {
     }
 
     // Use this for initialization
-    protected override void Start () {
+    public override void Start () {
         base.Start();
+        Debug.Log("Gange");
 	}
 
 }
