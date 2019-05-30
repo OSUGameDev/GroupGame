@@ -25,7 +25,7 @@ public abstract class Gun : MonoBehaviour {
             aim = playerCam.transform.GetChild(0).gameObject;
             
         }
-        
+		this.gameObject.layer = Bullet.BULLET_IGNORE_LAYER;
 
         pgo = GameObject.Find("PooledBullets").GetComponent<PooledGameObjects>();
         bulletId = pgo.InitializeObjectType(bulletObj);

@@ -17,10 +17,10 @@ public class CharacterGuns : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         allGuns = new GameObject[4];
-        allGuns[0] = Instantiate(pistol, this.gameObject.transform.forward, pistol.transform.rotation);
-        allGuns[1] = Instantiate(laserGun, this.gameObject.transform.forward, laserGun.transform.rotation);
-        allGuns[2] = Instantiate(rocketLauncher, this.gameObject.transform.forward, rocketLauncher.transform.rotation);
-        allGuns[3] = Instantiate(grenadeLauncher, this.gameObject.transform.forward, grenadeLauncher.transform.rotation);
+		allGuns[0] = Instantiate(pistol, this.gameObject.transform.position, pistol.transform.rotation);
+		allGuns[1] = Instantiate(laserGun, this.gameObject.transform.position, laserGun.transform.rotation);
+		allGuns[2] = Instantiate(rocketLauncher, this.gameObject.transform.position, rocketLauncher.transform.rotation);
+		allGuns[3] = Instantiate(grenadeLauncher, this.gameObject.transform.position, grenadeLauncher.transform.rotation);
 
         initGuns();
         SetCurrent(0);
@@ -40,6 +40,7 @@ public class CharacterGuns : MonoBehaviour {
             Debug.Log("ERROR: Trying to set index that is larger than the current gun list.");
             return;
         }
+
         if (currentGun != -1) {
             allGuns[currentGun].SetActive(false);
         }
