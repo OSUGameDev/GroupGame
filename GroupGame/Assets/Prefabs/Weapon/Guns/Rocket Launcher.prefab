@@ -110,3 +110,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletObj: {fileID: 1756925887665082, guid: 26a8fca519b309a4cb47dcf10a1d7e43, type: 2}
   coolDownMS: 100
+  playerCam: {fileID: 0}
+  aim: {fileID: 0}
