@@ -60,7 +60,7 @@ public abstract class Gun : MonoBehaviour {
             bullet.GetComponent<Rigidbody>().velocity = dir.normalized;
         }
         else {
-      aa      bullet.GetComponent<Rigidbody>().velocity = playerCam.transform.forward;    //speed multiplier added inside bullet object.
+            bullet.GetComponent<Rigidbody>().velocity = playerCam.transform.forward;    //speed multiplier added inside bullet object.
         }
 
         bullet.GetComponent<Bullet>().Reset();
