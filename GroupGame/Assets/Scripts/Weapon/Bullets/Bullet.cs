@@ -38,7 +38,7 @@ public abstract class Bullet : MonoBehaviour {
 
     // Please call this using base.Start in your override. 
     protected virtual void Start () {
-        
+        //having some weird concurrency issues with this, consider moving Explosion init to pooledgameobjects.
     }
 
     /// <summary>
