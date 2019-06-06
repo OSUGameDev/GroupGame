@@ -28,8 +28,7 @@ public abstract class Bullet : MonoBehaviour {
 
 
 //EXPLOSION VARS
-    protected PooledGameObjects pgo;
-    protected int explosionId;
+    protected int explosionId = -1;
 
     public bool explosive = false;
     public float explosionRadius = 0;
@@ -39,21 +38,7 @@ public abstract class Bullet : MonoBehaviour {
 
     // Please call this using base.Start in your override. 
     protected virtual void Start () {
-        gameObject.layer = BULLET_IGNORE_LAYER;
-        gameObject.name = this.GetType().Name; //will need to edit tag later to include playerID to allow collisions with other bullets.
-
-        ;
-
-        //making sure not to overwrite manually targeted explosion
-        if (explosive) {
-            if (explosionObj == null) {
-                //currently doesn't work, please drag explosion manually
-                explosionObj = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefab/Effect/Explosion/Explosion", typeof(GameObject));
-            }
-
-            pgo = GameObject.Find("PooledBullets").GetComponent<PooledGameObjects>();
-            explosionId = pgo.InitializeObjectType(explosionObj);
-        }
+        
     }
 
     /// <summary>
@@ -63,6 +48,19 @@ public abstract class Bullet : MonoBehaviour {
     public virtual void Reset() {
         existTime = 0;
         currentBounces = 0;
+
+        gameObject.layer = BULLET_IGNORE_LAYER;
+        gameObject.name = this.GetType().Name; //will need to edit tag later to include playerID to allow collisions with other bullets.
+
+
+        //making sure not to overwrite manually targeted explosion
+        if (explosive && explosionId == -1) {
+            if (explosionObj == null) {
+                //currently doesn't work, please drag explosion manually
+                explosionObj = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefab/Effect/Explosion/Explosion", typeof(GameObject));
+            }
+            explosionId = PooledGameObjects.InitializeObjectType(explosionObj);
+        }
 
         //default velocity is set by gun class using the camera.
         gameObject.GetComponent<Rigidbody>().velocity *= speed;
@@ -104,7 +102,7 @@ public abstract class Bullet : MonoBehaviour {
 
     private void OnTriggerEnter(Collider collider) {
         //automatically preventing bullets from coliding with the player or other bullets of the same type. 
-        if (collider.gameObject.name == "Player" || collider.gameObject.name == this.GetType().Name) {
+        if (collider.gameObject.layer == Bullet.BULLET_IGNORE_LAYER || collider.gameObject.name == "Player" || collider.gameObject.name == this.GetType().Name) {
             return;
         }else if (collider.tag == "Target Tester" || collider.tag == "Enemy") { //only explodes if the bullet hits a valid enemy. 
             if (explosive) { //calls explosion if 
@@ -149,7 +147,7 @@ public abstract class Bullet : MonoBehaviour {
 
     protected void explode() {
         if (explosionObj != null) { //calls explosion if 
-            GameObject exp = pgo.GetPooledObject(explosionId);
+            GameObject exp = PooledGameObjects.GetPooledObject(explosionId);
             exp.transform.position = transform.position;
             exp.transform.rotation = transform.rotation;
             exp.GetComponent<Explosion>().Reset(); //very important!!!

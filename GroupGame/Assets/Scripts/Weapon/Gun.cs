@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Gun : MonoBehaviour {
-
-    private PooledGameObjects pgo;
+    
     private long lastFireMS = 0;
     
     protected bool customFireSequence = false; //set this to true in child to disable default firing functionality
@@ -25,10 +24,9 @@ public abstract class Gun : MonoBehaviour {
             aim = playerCam.transform.GetChild(0).gameObject;
             
         }
-		this.gameObject.layer = Bullet.BULLET_IGNORE_LAYER;
-
-        pgo = GameObject.Find("PooledBullets").GetComponent<PooledGameObjects>();
-        bulletId = pgo.InitializeObjectType(bulletObj);
+		this.gameObject.layer = Bullet.BULLET_IGNORE_LAYER; //preventing the bullets from colliding with the guns
+        
+        bulletId = PooledGameObjects.InitializeObjectType(bulletObj);
     }
 
     public void SetCamera(Camera c) {
@@ -48,7 +46,7 @@ public abstract class Gun : MonoBehaviour {
         }
 
         //grabbing bullet object from the pooled game objects.
-        GameObject bullet = pgo.GetPooledObject(bulletId);
+        GameObject bullet = PooledGameObjects.GetPooledObject(bulletId);
         bullet.transform.position = transform.position;
         bullet.transform.rotation = transform.rotation;
         bullet.SetActive(true);

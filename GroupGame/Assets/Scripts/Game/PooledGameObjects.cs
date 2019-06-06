@@ -5,20 +5,20 @@ using UnityEngine;
 public class PooledGameObjects : MonoBehaviour {
 
 	[SerializeField]
-	private GameObject pooledObject; 	//the type of object to be pooled, NO LONGER USED
+	private static GameObject pooledObject; 	//the type of object to be pooled, NO LONGER USED
 
 	[SerializeField]
-	private bool canGrow = true; 		//if the number of objects in the pool can grow or not
+	private static bool canGrow = true; 		//if the number of objects in the pool can grow or not
 
     [SerializeField]
-    private bool allowDuplicateObjectNames = false; //if false, scans the list to see if any of the objects match the name of the inputted object, and returns that index if found.
+    private static bool allowDuplicateObjectNames = false; //if false, scans the list to see if any of the objects match the name of the inputted object, and returns that index if found.
     //highly reccomended since rockets try to initialize the explosion in each initialization. 
 
     [SerializeField]
-	private int pooledAmount = 10; 			//the number of objects in the pool
+	private static int pooledAmount = 10; 			//the number of objects in the pool
 
-	private List<List<GameObject>> pooledObjects;		//The pool of objects
-    private List<GameObject> pristeneObjects;           //objects that aren't tainted by the 
+	private static List<List<GameObject>> pooledObjects;		//The pool of objects
+    private static List<GameObject> pristeneObjects;           //objects that aren't tainted by the woes of the world (template objects to clone from)
 
 	// Use this for initialization
 	void Awake () { //changed to awake because guns were initializing prior to this function call.
@@ -34,7 +34,7 @@ public class PooledGameObjects : MonoBehaviour {
 	/// This method is to be used by other scripts in the scene.
 	/// </summary>
 	/// <returns>GameObject Pooled Object</returns>
-	public GameObject GetPooledObject(int objectId)
+	public static GameObject GetPooledObject(int objectId)
 	{
         if(objectId < 0 || objectId >= pooledObjects.Count) 
         {
@@ -65,7 +65,7 @@ public class PooledGameObjects : MonoBehaviour {
     /// Initializes the objects.
     /// </summary>
     /// <returns> ObjectId that will be used get a pooled object. </returns>
-    public int InitializeObjectType(GameObject pooledObj)
+    public static int InitializeObjectType(GameObject pooledObj)
     {
         //ensuring that user doesn't reinitialize an object, which would be a moderate waste of resources.
         if (!allowDuplicateObjectNames) {

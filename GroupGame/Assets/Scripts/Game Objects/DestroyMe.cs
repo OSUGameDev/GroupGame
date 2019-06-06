@@ -41,15 +41,19 @@ public class DestroyMe : MonoBehaviour {
 
 		if(Input.GetKeyDown(KeyCode.H))								//When H is pressed: TEMPORARY
 		{
-			completeObject.SetActive(false);						//deactivate the complete asset from the scene
-
-			foreach (Transform child in brokenObject.transform) 	//loop through all the shards (the children of the broken object), 
-			{														//	reactivate them, and apply an explosive for, coming from the explosion center.
-				child.gameObject.SetActive(true);
-				//child.gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, explosionLocation, explosionSize);
-			}
+            triggerExplosion();
 
 		}
 		
 	}
+
+    public void triggerExplosion() {
+        completeObject.SetActive(false);                        //deactivate the complete asset from the scene
+
+        foreach (Transform child in brokenObject.transform)     //loop through all the shards (the children of the broken object), 
+        {                                                       //	reactivate them, and apply an explosive for, coming from the explosion center.
+            child.gameObject.SetActive(true);
+            //child.gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, explosionLocation, explosionSize);
+        }
+    }
 }

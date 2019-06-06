@@ -15,12 +15,21 @@ public class Explosion : MonoBehaviour
     }
 
 	public void Reset(){
+        power = 1000f;
+        explosion_radius = 10f;
+
 		Collider[] explod_list = Physics.OverlapSphere(transform.position, explosion_radius);           //Get the affected object by this explision inside the radius
 		foreach (Collider explod_object in explod_list)         //For each object
 		{
-			if (explod_object.gameObject.GetComponent<Rigidbody>())         //If the target object has a rigidbody, which means they could be forced away!
+            if (explod_object.gameObject.GetComponent<DestroyMe>()) { //need this to trigger first so the object to be blown up, gets converted into rigid body blocks first
+                explod_object.gameObject.GetComponent<DestroyMe>().triggerExplosion();
+
+            }
+
+            if (explod_object.gameObject.GetComponent<Rigidbody>())         //If the target object has a rigidbody, which means they could be forced away!
 			{
 				explod_object.gameObject.GetComponent<Rigidbody>().AddExplosionForce(power, transform.position, explosion_radius);          //Add a explosion effect on them
+
 			}
 		}
 		explosion_time = 10f;

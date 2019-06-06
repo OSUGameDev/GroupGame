@@ -10,7 +10,6 @@ public class SmallRocket : Bullet {
         damage = 50;
         explosive = true;
         maxExistTime = 10f;
-        speed = 10f;
     }
 
 	// Use this for initialization
